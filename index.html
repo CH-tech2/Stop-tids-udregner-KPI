@@ -129,6 +129,24 @@ min    Maskine    fejl    Mek/EL
 <script>
 (function(){
   const $ = (id)=>document.getElementById(id);
+  const MACHINE_ORDER = ["PSM01", "PSM02", "Teclict (sav01)", "Lamel", "Krymperen", "Rpi XII", "Sav 42", "Sav 44", "Sav 46", "Sav 48", "Rundsav (Sav35)", "Valse prasse", "Båndsav 33", "Båndsav 34", "Båndsav LJ"];
+  const orderIndex = new Map(MACHINE_ORDER.map((m,i)=>[m.toLowerCase(), i]));
+  // Aliaser fra dine Excel-navne til standardnavne i rapporten
+  const MACHINE_ALIASES = new Map([
+    ["krymp", "Krymperen"],
+    ["krymper", "Krymperen"],
+    ["krymperen", "Krymperen"],
+    ["telclikt", "Teclict (sav01)"],
+    ["teclict", "Teclict (sav01)"],
+    ["teclict (sav01)", "Teclict (sav01)"],
+  ]);
+
+  function normalizeMachineName(name){
+    const raw = String(name ?? "").trim();
+    const key = raw.toLowerCase();
+    return MACHINE_ALIASES.get(key) || raw;
+  }
+
 
   function parseNumber(str){
     if(str==null) return NaN;
@@ -199,7 +217,7 @@ min    Maskine    fejl    Mek/EL
       if(isSubtotalRow(cells)) continue; // ignore subtotal/sum rows
 
       const minStr = cells[colMap.min] ?? '';
-      const maskine = (cells[colMap.maskine] ?? '').trim();
+      const maskine = normalizeMachineName((cells[colMap.maskine] ?? '').trim());
       const typeRaw = (cells[colMap.type] ?? '').trim();
 
       const minutes = parseNumber(minStr);
@@ -239,7 +257,13 @@ min    Maskine    fejl    Mek/EL
     }
     const out = Array.from(byMachine.values())
       .map(x=>({ ...x, total: x.mek + x.el }))
-      .sort((a,b)=> b.total - a.total || a.maskine.localeCompare(b.maskine,'da'));
+      .sort((a,b)=>{
+        const ai = orderIndex.has(a.maskine.toLowerCase()) ? orderIndex.get(a.maskine.toLowerCase()) : 1e9;
+        const bi = orderIndex.has(b.maskine.toLowerCase()) ? orderIndex.get(b.maskine.toLowerCase()) : 1e9;
+        if(ai!==bi) return ai-bi;
+        // fallback: keep stable-ish by total desc then name
+        return (b.total - a.total) || a.maskine.localeCompare(b.maskine,'da');
+      });
     return {out, totalMek, totalEl};
   }
 
@@ -373,3 +397,4 @@ min    Maskine    fejl    Mek/EL
 </script>
 </body>
 </html>
+
