@@ -1,261 +1,405 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="da">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Stop-tider (Mek/El) – Stop tid</title>
-  <style>
-    :root{
-      --rw-red:#D20014;
-      --rw-darkred:#9F000F;
-      --rw-teal:#208684;
-      --rw-gray:#656565;
-      --bg:#f7f7f8;
-      --card:#ffffff;
-      --border:#e2e2e6;
-    }
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:var(--bg);color:#111;}
-    header{background:linear-gradient(90deg,var(--rw-red),var(--rw-darkred));color:#fff;padding:18px 22px;}
-    header h1{margin:0;font-size:18px;font-weight:700;letter-spacing:.2px}
-    header p{margin:6px 0 0;font-size:13px;opacity:.95}
-    main{padding:18px 22px;max-width:1100px;margin:0 auto;}
-    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;align-items:start}
-    @media (max-width:980px){.grid{grid-template-columns:1fr}}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
-    .card h2{margin:0 0 10px;font-size:14px;color:var(--rw-gray)}
-    textarea{width:100%;min-height:260px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      font-size:12px;border:1px solid var(--border);border-radius:10px;padding:10px;outline:none}
-    textarea:focus{border-color:var(--rw-teal);box-shadow:0 0 0 3px rgba(32,134,132,.15)}
-    .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-    button{border:0;border-radius:10px;padding:10px 12px;font-weight:700;cursor:pointer;font-size:13px}
-    .primary{background:var(--rw-teal);color:#fff}
-    .danger{background:var(--rw-red);color:#fff}
-    .ghost{background:#fff;border:1px solid var(--border);color:#111}
-    .small{font-size:12px;padding:8px 10px;border-radius:9px;font-weight:700}
-    .note{font-size:12px;color:var(--rw-gray);line-height:1.35}
-    .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-    .stat{border:1px solid var(--border);border-radius:12px;padding:10px}
-    .stat .k{font-size:12px;color:var(--rw-gray)}
-    .stat .v{font-size:18px;font-weight:800;margin-top:2px}
-    table{width:100%;border-collapse:separate;border-spacing:0;margin-top:10px;font-size:13px}
-    th,td{padding:8px 8px;border-bottom:1px solid var(--border);vertical-align:top}
-    th{position:sticky;top:0;background:#fff;z-index:1;text-align:left;font-size:12px;color:var(--rw-gray)}
-    tbody tr:hover{background:#fafafa}
-    .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:800}
-    .pill.mek{background:rgba(210,0,20,.10);color:var(--rw-darkred);border:1px solid rgba(210,0,20,.20)}
-    .pill.el{background:rgba(32,134,132,.12);color:var(--rw-teal);border:1px solid rgba(32,134,132,.22)}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
-    .footerline{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-    .muted{color:var(--rw-gray);font-size:12px}
-    .err{color:var(--rw-red);font-weight:700;font-size:12px;margin-top:8px}
-    .ok{color:var(--rw-teal);font-weight:700;font-size:12px;margin-top:8px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stop Tider Beregner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #D20014;
+            margin-bottom: 8px;
+            font-size: 28px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .input-section {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #0f3460;
+        }
+        .input-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #208684;
+            font-size: 16px;
+        }
+        .input-section p {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            background: #0f3460;
+            border: 1px solid #1a4a8a;
+            border-radius: 8px;
+            color: #e0e0e0;
+            padding: 12px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #208684;
+            box-shadow: 0 0 8px rgba(32, 134, 132, 0.3);
+        }
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 14px;
+        }
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-calc {
+            background: #D20014;
+            color: white;
+        }
+        .btn-calc:hover {
+            background: #9F000F;
+            transform: translateY(-1px);
+        }
+        .btn-clear {
+            background: #333;
+            color: #ccc;
+        }
+        .btn-clear:hover {
+            background: #444;
+        }
+        .results {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #0f3460;
+            display: none;
+        }
+        .results h2 {
+            color: #208684;
+            margin-bottom: 16px;
+            font-size: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th {
+            background: #0f3460;
+            color: #208684;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 14px;
+            border-bottom: 2px solid #208684;
+        }
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #1a3a5c;
+            font-size: 14px;
+        }
+        tr:hover {
+            background: rgba(32, 134, 132, 0.08);
+        }
+        tr.total-row {
+            background: rgba(210, 0, 20, 0.15);
+            font-weight: 700;
+        }
+        tr.total-row td {
+            border-top: 2px solid #D20014;
+            color: #ff6b6b;
+            font-size: 15px;
+        }
+        .no-data {
+            color: #555;
+            text-align: center;
+            font-style: italic;
+        }
+        .mek {
+            color: #f0a500;
+        }
+        .el {
+            color: #4fc3f7;
+        }
+        .error-msg {
+            background: rgba(210, 0, 20, 0.2);
+            border: 1px solid #D20014;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            color: #ff6b6b;
+            display: none;
+        }
+        .stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            flex: 1;
+            background: #0f3460;
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+        .stat-box .label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stat-box .value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        .stat-box .unit {
+            font-size: 13px;
+            color: #888;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Stop-tider (Mek/El) – beregning pr. maskine</h1>
-    <p>Kopiér rækker fra Excel og indsæt her. Appen ignorerer fejlbeskrivelse-kolonnen og subtotal-linjer (fx grønne summer).</p>
-  </header>
+    <div class="container">
+        <h1>⏱ Stop Tider Beregner</h1>
+        <p class="subtitle">Indsæt data fra Excel – beregn Mek og El stoptider pr. maskine</p>
 
-  <main>
-    <div class="grid">
-      <section class="card">
-        <h2>1) Indsæt data (fra Excel)</h2>
-        <textarea id="input" placeholder="Indsæt her (tab-separeret fra Excel):
-min    Maskine    fejl    Mek/EL
-50     Krymperen  ...     Mek
-10     Krymperen  ...     El"></textarea>
-        <div class="btnrow">
-          <button class="primary" id="calcBtn">Beregn</button>
-          <button class="ghost" id="demoBtn">Indsæt demo</button>
-          <button class="danger" id="clearBtn">Ryd</button>
-        </div>
-        <div id="msg" class="muted" aria-live="polite"></div>
-        <div class="note" style="margin-top:10px">
-          <b>Tips:</b> Markér i Excel hele området inkl. kolonneoverskrifter og kopiér (Ctrl+C). Indsæt her (Ctrl+V).
-          Appen accepterer både tab-separeret og semikolon-separeret tekst.
-        </div>
-      </section>
-
-      <aside class="card">
-        <h2>2) Resultat (sum minutter)</h2>
-
-        <div class="stats">
-          <div class="stat">
-            <div class="k">Total Mek</div>
-            <div class="v" id="totalMek">0</div>
-          </div>
-          <div class="stat">
-            <div class="k">Total El</div>
-            <div class="v" id="totalEl">0</div>
-          </div>
+        <div class="input-section">
+            <label>📋 Indsæt data fra Excel:</label>
+            <p>Kolonner: <strong>min</strong> | <strong>Maskine</strong> | <strong>fejl (ignoreres)</strong> | <strong>Mek/EL</strong></p>
+            <textarea id="dataInput" placeholder="Indsæt dine rækker her fra Excel...&#10;&#10;Eksempel:&#10;50&#9;Krymperen&#9;Smed på løftegrej&#9;Mek&#10;10&#9;PSM01&#9;Fejl på motor&#9;El&#10;25&#9;Sav 42&#9;Kniv skift&#9;Mek"></textarea>
+            <div class="buttons">
+                <button class="btn btn-calc" onclick="beregn()">📊 Beregn</button>
+                <button class="btn btn-clear" onclick="ryd()">🗑 Ryd</button>
+            </div>
         </div>
 
-        <div class="footerline">
-          <div class="muted">Eksport:</div>
-          <div class="btnrow" style="margin:0">
-            <button class="small ghost" id="copyTableBtn">Kopiér resultat (TSV)</button>
-            <button class="small ghost" id="downloadCsvBtn">Download CSV</button>
-          </div>
-        </div>
+        <div class="error-msg" id="errorMsg"></div>
 
-        <div class="note" style="margin-top:10px">
-          Resultattabel viser <b>Mek-min</b>, <b>El-min</b> og <b>total</b> pr. maskine.
+        <div class="results" id="results">
+            <h2>📊 Resultater</h2>
+
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="label">Total Mek</div>
+                    <div class="value mek" id="totalMek">0</div>
+                    <div class="unit">minutter</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Total El</div>
+                    <div class="value el" id="totalEl">0</div>
+                    <div class="unit">minutter</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Samlet Stop</div>
+                    <div class="value" id="totalAll" style="color: #D20014;">0</div>
+                    <div class="unit">minutter</div>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Maskine</th>
+                        <th>Mek (min)</th>
+                        <th>El (min)</th>
+                        <th>Total (min)</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
         </div>
-      </aside>
     </div>
 
-    <section class="card" style="margin-top:14px">
-      <h2>3) Tabel pr. maskine</h2>
-      <div style="overflow:auto;max-height:420px;border:1px solid var(--border);border-radius:12px">
-        <table id="resultTable">
-          <thead>
-            <tr>
-              <th>Maskine</th>
-              <th>Mek (min)</th>
-              <th>El (min)</th>
-              <th>Total (min)</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-      <div class="note" style="margin-top:10px">
-        <span class="pill mek">Mek</span> og <span class="pill el">El</span> tolkes case-insensitivt (<span class="mono">mek/Mek</span>, <span class="mono">el/El</span>).
-      </div>
-    </section>
-  </main>
+    <script>
+        // Fast rækkefølge af maskiner
+        const maskinRækkefølge = [
+            "PSM01",
+            "PSM02",
+            "Teclict sav01",
+            "Lamel",
+            "Krymperen",
+            "RPI XII",
+            "Sav 42",
+            "Sav 44",
+            "Sav 46",
+            "Sav 48",
+            "Rundsav (Sav35)",
+            "Valse",
+            "Båndsav 33",
+            "Båndsav 34",
+            "Båndsav Linje"
+        ];
 
-<script>
-(function(){
-  const $ = (id)=>document.getElementById(id);
-  const MACHINE_ORDER = ["PSM01", "PSM02", "Teclict (sav01)", "Lamel", "Krymperen", "Rpi XII", "Sav 42", "Sav 44", "Sav 46", "Sav 48", "Rundsav (Sav35)", "Valse prasse", "Båndsav 33", "Båndsav 34", "Båndsav LJ"];
-  const orderIndex = new Map(MACHINE_ORDER.map((m,i)=>[m.toLowerCase(), i]));
-  // Aliaser fra dine Excel-navne til standardnavne i rapporten
-  const MACHINE_ALIASES = new Map([
-    ["krymp", "Krymperen"],
-    ["krymper", "Krymperen"],
-    ["krymperen", "Krymperen"],
-    ["telclikt", "Teclict (sav01)"],
-    ["teclict", "Teclict (sav01)"],
-    ["teclict (sav01)", "Teclict (sav01)"],
-  ]);
+        // Normalisering: map varianter til det korrekte navn
+        function normaliserMaskin(navn) {
+            const n = navn.trim().toLowerCase();
 
-  function normalizeMachineName(name){
-    const raw = String(name ?? "").trim();
-    const key = raw.toLowerCase();
-    return MACHINE_ALIASES.get(key) || raw;
-  }
+            for (let i = 0; i < maskinRækkefølge.length; i++) {
+                if (n === maskinRækkefølge[i].toLowerCase()) {
+                    return maskinRækkefølge[i];
+                }
+            }
 
+            // Fuzzy matching for varianter
+            if (n.includes("psm01") || n === "psm 01") return "PSM01";
+            if (n.includes("psm02") || n === "psm 02") return "PSM02";
+            if (n.includes("teclict") || n.includes("telclikt") || n.includes("sav01") || n.includes("sav 01")) return "Teclict sav01";
+            if (n.includes("lamel")) return "Lamel";
+            if (n.includes("krymp")) return "Krymperen";
+            if (n.includes("rpi")) return "RPI XII";
+            if (n.includes("sav 42") || n === "sav42") return "Sav 42";
+            if (n.includes("sav 44") || n === "sav44") return "Sav 44";
+            if (n.includes("sav 46") || n === "sav46") return "Sav 46";
+            if (n.includes("sav 48") || n === "sav48") return "Sav 48";
+            if (n.includes("rundsav") || n.includes("sav35") || n.includes("sav 35")) return "Rundsav (Sav35)";
+            if (n.includes("valse")) return "Valse";
+            if (n.includes("båndsav 33") || n.includes("båndsav33")) return "Båndsav 33";
+            if (n.includes("båndsav 34") || n.includes("båndsav34")) return "Båndsav 34";
+            if (n.includes("båndsav l") || n.includes("båndsav lj") || n.includes("båndsav linje")) return "Båndsav Linje";
 
-  function parseNumber(str){
-    if(str==null) return NaN;
-    // Accept "12", "12,5", "12.5"
-    const s = String(str).trim().replace(/\./g,'.').replace(',', '.');
-    const v = Number(s);
-    return v;
-  }
+            // Ukendt maskine – returner originalt navn trimmet
+            return navn.trim();
+        }
 
-  function splitLine(line){
-    // Prefer tabs; fallback to semicolon; fallback to multiple spaces
-    if(line.includes('\t')) return line.split('\t');
-    if(line.includes(';')) return line.split(';');
-    // keep simple: split by 2+ spaces
-    return line.trim().split(/\s{2,}/);
-  }
+        function normaliserType(type) {
+            const t = type.trim().toLowerCase();
+            if (t === "mek") return "Mek";
+            if (t === "el") return "El";
+            return null;
+        }
 
-  function normalizeHeader(h){
-    return String(h||'').trim().toLowerCase();
-  }
+        function beregn() {
+            const input = document.getElementById('dataInput').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            const results = document.getElementById('results');
 
-  function isSubtotalRow(cells){
-    // Typical subtotal row: only first cell has a number and the rest is empty
-    if(!cells || cells.length===0) return false;
-    const first = String(cells[0]??'').trim();
-    const rest = cells.slice(1).map(x=>String(x??'').trim()).join('');
-    const n = parseNumber(first);
-    return (first !== '' && !Number.isNaN(n) && rest === '');
-  }
+            errorMsg.style.display = 'none';
+            results.style.display = 'none';
 
-  function detectColumns(headerCells){
-    // We accept variations; but expected: min, Maskine, fejl, Mek/EL
-    const map = {};
-    headerCells.forEach((h,i)=>{
-      const k = normalizeHeader(h);
-      if(k==='min' || k==='mins' || k==='minute' || k==='minutter') map.min=i;
-      if(k==='maskine' || k==='machine') map.maskine=i;
-      if(k==='mek/el' || k==='mekel' || k==='mek / el' || k==='type') map.type=i;
-      if(k==='fejl' || k==='fejlbeskrivelse' || k==='beskrivelse') map.fejl=i;
-    });
+            if (!input) {
+                errorMsg.textContent = '⚠ Indsæt venligst data i feltet ovenfor.';
+                errorMsg.style.display = 'block';
+                return;
+            }
 
-    // Fallbacks if headers missing: assume fixed order
-    if(map.min==null) map.min = 0;
-    if(map.maskine==null) map.maskine = 1;
-    if(map.type==null) map.type = 3; // 4th column in your layout
-    return map;
-  }
+            const linjer = input.split('\n');
+            const data = {}; // { maskinNavn: { Mek: 0, El: 0 } }
+            let fejlLinjer = 0;
 
-  function parseInput(text){
-    const lines = String(text||'')
-      .replace(/\r/g,'')
-      .split('\n')
-      .map(l=>l.trimEnd())
-      .filter(l=>l.trim()!=='');
-    if(lines.length===0) return {rows:[], errors:['Ingen data.']};
+            for (let linje of linjer) {
+                linje = linje.trim();
+                if (!linje) continue;
 
-    const firstCells = splitLine(lines[0]).map(c=>String(c).trim());
-    const hasHeader = firstCells.some(c => normalizeHeader(c)==='min' || normalizeHeader(c)==='maskine' || normalizeHeader(c).includes('mek'));
-    const colMap = detectColumns(hasHeader ? firstCells : ['min','maskine','fejl','mek/el']);
+                // Split på tab
+                const dele = linje.split('\t');
 
-    const startIndex = hasHeader ? 1 : 0;
-    const rows=[];
-    const errors=[];
-    for(let i=startIndex;i<lines.length;i++){
-      const raw = lines[i];
-      const cells = splitLine(raw).map(c=>String(c).trim());
-      if(cells.length===0) continue;
-      if(isSubtotalRow(cells)) continue; // ignore subtotal/sum rows
+                // Skal have mindst 4 kolonner: min, maskine, fejl, mek/el
+                if (dele.length < 4) {
+                    // Kan være en subtotal-linje (kun et tal) – ignorer
+                    fejlLinjer++;
+                    continue;
+                }
 
-      const minStr = cells[colMap.min] ?? '';
-      const maskine = normalizeMachineName((cells[colMap.maskine] ?? '').trim());
-      const typeRaw = (cells[colMap.type] ?? '').trim();
+                const minStr = dele[0].trim();
+                const maskinRå = dele[1].trim();
+                // dele[2] = fejlbeskrivelse – ignoreres
+                const typeRå = dele[3].trim();
 
-      const minutes = parseNumber(minStr);
-      const type = typeRaw.toLowerCase();
+                // Parse minutter
+                const minutter = parseInt(minStr, 10);
+                if (isNaN(minutter)) {
+                    fejlLinjer++;
+                    continue;
+                }
 
-      // Skip lines that are not data (e.g., empty machine/type or non-numeric minutes)
-      if(maskine==='' && typeRaw==='' && (minStr==='' || Number.isNaN(minutes))) continue;
+                // Normaliser type
+                const type = normaliserType(typeRå);
+                if (!type) {
+                    fejlLinjer++;
+                    continue;
+                }
 
-      if(Number.isNaN(minutes)){
-        errors.push(`Linje ${i+1}: kan ikke læse min="${minStr}"`);
-        continue;
-      }
-      if(maskine===''){
-        errors.push(`Linje ${i+1}: mangler maskine`);
-        continue;
-      }
-      if(!(type==='mek' || type==='el')){
-        errors.push(`Linje ${i+1}: Mek/EL skal være "Mek" eller "El" (fik "${typeRaw}")`);
-        continue;
-      }
-      rows.push({minutes, maskine, type});
-    }
-    return {rows, errors};
-  }
+                // Normaliser maskinnavn
+                const maskine = normaliserMaskin(maskinRå);
 
-  function aggregate(rows){
-    const byMachine = new Map();
-    let totalMek=0, totalEl=0;
+                if (!data[maskine]) {
+                    data[maskine] = { Mek: 0, El: 0 };
+                }
+                data[maskine][type] += minutter;
+            }
 
-    for(const r of rows){
-      if(!byMachine.has(r.maskine)){
-        byMachine.set(r.maskine, {maskine:r.maskine, mek:0, el:0});
-      }
-      const rec = byMachine.get(r.maskine);
-      if(r.type==='mek'){ rec.mek += r.minutes; totalMek += r.minutes; }
-      if(r.type==='el'){ rec.el  += r.minutes; totalEl  += r.minutes; }
-    }
-    const out = Array.from(byMachine.values())
-      .map(x=>({ ...x, total: x.mek + x.el }))
-      .sort((a,b)=>{
-        const ai =
+            // Check om vi har data
+            const alleMaskiner = Object.keys(data);
+            if (alleMaskiner.length === 0) {
+                errorMsg.textContent = '⚠ Kunne ikke finde gyldige datarækker. Tjek at formatet er: min [TAB] Maskine [TAB] fejl [TAB] Mek/El';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Byg sorteret liste: først kendte maskiner i fast rækkefølge, derefter ukendte
+            const sorteredeMaskiner = [];
+            for (let m of maskinRækkefølge) {
+                if (data[m]) {
+                    sorteredeMaskiner.push(m);
+                }
+            }
+            // Tilføj eventuelle ukendte maskiner til sidst
+            for (let m of alleMaskiner) {
+                if (!sorteredeMaskiner.includes(m)) {
+                    sorteredeMaskiner.push(m);
+                }
+            }
+
+            // Beregn totaler
+            let totalMek = 0;
+            let totalEl = 0;
+
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            for (let maskine of sorteredeMaskiner) {
+                const mek = data[maskine].Mek;
+                const el = data[maskine].El;
+                const total = mek + el;
+
+                totalMek += mek;
+                totalEl += el;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${maskine}</td>
+                    <td class="mek">${mek > 0 ? mek : '-'}</td>
+                    <td class="el">${el > 0 ? el : '-'}</td>
+                    <td>${total}</td>
